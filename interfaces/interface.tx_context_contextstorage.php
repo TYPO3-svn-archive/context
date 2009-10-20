@@ -29,7 +29,7 @@
  * @package		TYPO3
  * @subpackage	tx_context
  *
- *  $Id: class.tx_context.php 25621 2009-10-20 10:34:39Z francois $
+ *  $Id$
  */
 interface tx_context_ContextStorage {
 
