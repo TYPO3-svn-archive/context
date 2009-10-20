@@ -22,6 +22,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+require_once(t3lib_extMgm::extPath('context', 'interfaces/interface.tx_content_contextstorage.php'));
+
 /** 
  * This class provides the functionality for the tx_cachecleaner_cache module of the lowlevel_cleaner
  *
@@ -45,7 +47,8 @@ class tx_context {
 
 	/**
 	 * This method responds to the configArrayPostProc hook of tslib_fe
-	 * It takes the context information from the template and loads it into memory
+	 * It takes the context information from the template and calls on handlers
+	 * to load the data where ever necessary
 	 *
 	 * @param	array		$params: Single entry array containing the "config" part of the template
 	 * @param	tslib_fe	$pObj: back-reference to the calling object
@@ -55,15 +58,34 @@ class tx_context {
 	public function loadContext($params, $pObj) {
 		$context = array();
 		$contextSetup = array();
-		if (isset($pObj->tmpl->setup['plugin.']['tx_' . $this->extKey . '.'])) {
-			$contextSetup = $pObj->tmpl->setup['plugin.']['tx_' . $this->extKey . '.'];
-		}
-		if (count($contextSetup) > 0) {
-			foreach ($contextSetup as $key => $value) {
-				$context[$key] = $value;
+		$tsKey = 'tx_' . $this->extKey . '.';
+			// Check for existing context information
+		if (isset($pObj->tmpl->setup['plugin.'][$tsKey])) {
+			$contextSetup = $pObj->tmpl->setup['plugin.'][$tsKey];
+				// Parse the context to make it into a simple hash table
+			if (count($contextSetup) > 0) {
+				foreach ($contextSetup as $key => $value) {
+					$contextValue = $value;
+						// If the value contains a colon (:), it means it has a syntax like:
+						//		tablename:uid
+						// In this case, keep only the uid part
+					if (strpos($value, ':') !== false) {
+						$valueParts = t3lib_div::trimExplode(':', $value, TRUE);
+						$contextValue = $valueParts[1];
+					}
+					$context[$key] = $contextValue;
+				}
+					// Call context storing handlers to store the context where ever it is needed
+				if (is_array($this->TYPO3_CONF_VARS['EXTCONF']['tx_context']['contextStorage'])) {
+					foreach ($this->TYPO3_CONF_VARS['EXTCONF']['tx_context']['contextStorage'] as $className) {
+						$contextStorage = t3lib_div::getUserObj($className);
+						if ($contextStorage instanceof tx_context_ContextStorage) {
+							$contextStorage->storeContext($context);
+						}
+					}
+				}
 			}
 		}
-		t3lib_div::debug($context, 'Parsed context');
 	}
 }
 
