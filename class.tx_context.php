@@ -22,7 +22,7 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('context', 'interfaces/interface.tx_content_contextstorage.php'));
+require_once(t3lib_extMgm::extPath('context', 'interfaces/interface.tx_context_contextstorage.php'));
 
 /** 
  * This class provides the functionality for the tx_cachecleaner_cache module of the lowlevel_cleaner
@@ -46,11 +46,24 @@ class tx_context {
 	}
 
 	/**
+	 * Wrapper method around loadContext()
+	 * Necessary for use with TYPO3 < 4.3 because the hook supposed to call loadContext()
+	 * doesn't exist before then.
+	 * The workaround is to call handleContext() from a USER object as early as possible
+	 * during page construction
+	 *
+	 * @return	void
+	 */
+	public function handleContext() {
+		$this->loadContext(array(), $GLOBALS['TSFE']);
+	}
+
+	/**
 	 * This method responds to the configArrayPostProc hook of tslib_fe
 	 * It takes the context information from the template and calls on handlers
 	 * to load the data where ever necessary
 	 *
-	 * @param	array		$params: Single entry array containing the "config" part of the template
+	 * @param	array		$params: Single entry array containing the "config" part of the template (not used)
 	 * @param	tslib_fe	$pObj: back-reference to the calling object
 	 *
 	 * @return	void
@@ -76,8 +89,8 @@ class tx_context {
 					$context[$key] = $contextValue;
 				}
 					// Call context storing handlers to store the context where ever it is needed
-				if (is_array($this->TYPO3_CONF_VARS['EXTCONF']['tx_context']['contextStorage'])) {
-					foreach ($this->TYPO3_CONF_VARS['EXTCONF']['tx_context']['contextStorage'] as $className) {
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['contextStorage'])) {
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['contextStorage'] as $className) {
 						$contextStorage = t3lib_div::getUserObj($className);
 						if ($contextStorage instanceof tx_context_ContextStorage) {
 							$contextStorage->storeContext($context);
