@@ -22,7 +22,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('context', 'interfaces/interface.tx_context_contextstorage.php'));
 
 /** 
  * This class provides the functionality for the tx_cachecleaner_cache module of the lowlevel_cleaner
@@ -104,7 +103,7 @@ class tx_context {
 
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/context/class.tx_context.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/context/class.tx_context.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/context/class.tx_context.php']);
 }
 ?>

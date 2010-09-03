@@ -1,2 +1,4 @@
+This extension is designed to help define contexts for information. It is part
+of the Tesseract project.
 
-Feel free to add some documentation or simply add a link to the online manual.
+Refer to the manual for more information.
