@@ -34,28 +34,6 @@
  */
 class tx_context {
 	protected $extKey = 'context';	// The extension key
-//	protected $extConf = array(); // Extension configuration
-
-	/**
-	 * Constructor
-	 */
-	public function __construct() {
-			// Load the extension configuration
-//		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
-	}
-
-	/**
-	 * Wrapper method around loadContext()
-	 * Necessary for use with TYPO3 < 4.3 because the hook supposed to call loadContext()
-	 * doesn't exist before then.
-	 * The workaround is to call handleContext() from a USER object as early as possible
-	 * during page construction
-	 *
-	 * @return	void
-	 */
-	public function handleContext() {
-		$this->loadContext(array(), $GLOBALS['TSFE']);
-	}
 
 	/**
 	 * This method responds to the configArrayPostProc hook of tslib_fe
@@ -72,8 +50,8 @@ class tx_context {
 		$contextSetup = array();
 		$tsKey = 'tx_' . $this->extKey . '.';
 			// Check for existing context information
-		if (isset($pObj->tmpl->setup['plugin.'][$tsKey])) {
-			$contextSetup = $pObj->tmpl->setup['plugin.'][$tsKey];
+		if (isset($params['config'][$tsKey])) {
+			$contextSetup = $params['config'][$tsKey];
 				// Parse the context to make it into a simple hash table
 			if (count($contextSetup) > 0) {
 				foreach ($contextSetup as $key => $value) {
@@ -81,13 +59,19 @@ class tx_context {
 						// If the value contains a colon (:), it means it has a syntax like:
 						//		tablename:uid
 						// In this case, keep only the uid part
-					if (strpos($value, ':') !== false) {
+					if (strpos($value, ':') !== FALSE) {
 						$valueParts = t3lib_div::trimExplode(':', $value, TRUE);
-						$contextValue = $valueParts[1];
+						if (isset($valueParts[1])) {
+							$contextValue = $valueParts[1];
+						}
 					}
 					$context[$key] = $contextValue;
 				}
-					// Call context storing handlers to store the context where ever it is needed
+
+					// Load the context setup into the expression parser's extra data
+				tx_expressions_parser::setExtraData($context);
+					// Call additional context storing handlers to make the context setup available
+					// where ever else it may be needed
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['contextStorage'])) {
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['contextStorage'] as $className) {
 						$contextStorage = t3lib_div::getUserObj($className);
