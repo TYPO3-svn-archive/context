@@ -3,7 +3,7 @@
 ########################################################################
 # Extension Manager/Repository config file for ext "context".
 #
-# Auto generated 20-10-2009 11:33
+# Auto generated 27-09-2010 15:33
 #
 # Manual updates:
 # Only the data in the array - everything else is removed by next
@@ -17,11 +17,11 @@ $EM_CONF[$_EXTKEY] = array(
 	'author' => 'Francois Suter (Cobweb)',
 	'author_email' => 'typo3@cobweb.ch',
 	'shy' => '',
-	'dependencies' => '',
+	'dependencies' => 'expressions',
 	'conflicts' => '',
 	'priority' => '',
 	'module' => '',
-	'state' => 'alpha',
+	'state' => 'stable',
 	'internal' => '',
 	'uploadfolder' => 0,
 	'createDirs' => '',
@@ -29,18 +29,20 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 0,
 	'lockType' => '',
 	'author_company' => '',
-	'version' => '0.1.0',
+	'version' => '1.0.0',
 	'constraints' => array(
 		'depends' => array(
 			'typo3' => '4.3.0-0.0.0',
-			'expressions' => ''
+			'expressions' => '',
 		),
 		'conflicts' => array(
 		),
 		'suggests' => array(
 		),
 	),
-	'_md5_values_when_last_written' => 'a:9:{s:9:"ChangeLog";s:4:"24f6";s:10:"README.txt";s:4:"ee2d";s:12:"ext_icon.gif";s:4:"1bdc";s:14:"ext_tables.php";s:4:"2d51";s:16:"locallang_db.xml";s:4:"0445";s:19:"doc/wizard_form.dat";s:4:"0fdc";s:20:"doc/wizard_form.html";s:4:"537d";s:38:"modfunc1/class.tx_context_modfunc1.php";s:4:"7a70";s:22:"modfunc1/locallang.xml";s:4:"c3a1";}',
+	'_md5_values_when_last_written' => 'a:10:{s:9:"ChangeLog";s:4:"76ff";s:10:"README.txt";s:4:"3b05";s:20:"class.tx_context.php";s:4:"0cea";s:16:"ext_autoload.php";s:4:"2f54";s:12:"ext_icon.gif";s:4:"b6d8";s:17:"ext_localconf.php";s:4:"0bf1";s:16:"locallang_db.xml";s:4:"0445";s:14:"doc/manual.pdf";s:4:"4204";s:14:"doc/manual.sxw";s:4:"5755";s:50:"interfaces/interface.tx_context_contextstorage.php";s:4:"0c4a";}',
+	'suggests' => array(
+	),
 );
 
 ?>
