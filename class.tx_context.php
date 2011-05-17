@@ -40,12 +40,12 @@ class tx_context {
 	 * It takes the context information from the template and calls on handlers
 	 * to load the data where ever necessary
 	 *
-	 * @param	array		$params: Single entry array containing the "config" part of the template (not used)
-	 * @param	tslib_fe	$pObj: back-reference to the calling object
+	 * @param array $params Single entry array containing the "config" part of the template (not used)
+	 * @param tslib_fe $parentObject back-reference to the calling object
 	 *
 	 * @return	void
 	 */
-	public function loadContext($params, $pObj) {
+	public function loadContext($params, tslib_fe $parentObject) {
 		$context = array();
 		$tsKey = 'tx_' . $this->extKey . '.';
 			// Check for existing context information
