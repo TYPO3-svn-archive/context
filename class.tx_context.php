@@ -73,6 +73,7 @@ class tx_context {
 					// where ever else it may be needed
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['contextStorage'])) {
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['contextStorage'] as $className) {
+							/** @var $contextStorage tx_context_ContextStorage */
 						$contextStorage = t3lib_div::getUserObj($className);
 						if ($contextStorage instanceof tx_context_ContextStorage) {
 							$contextStorage->storeContext($context);
