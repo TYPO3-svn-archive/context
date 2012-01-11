@@ -1,0 +1,85 @@
+﻿
+EXT: Context Manager
+Extension Key: context
+Language: en
+Keywords: forAdmins, forIntermediates
+Copyright 2000-2010, François Suter, <typo3@cobweb.ch>
+
+This document is published under the Open Content License
+available from http://www.opencontent.org/opl.shtml
+
+The content of this document is related to TYPO3 
+- a GNU/GPL CMS/Framework available from www.typo3.org
+
+Table of Contents
+EXT: Context Manager	1
+Introduction	3
+What does it do?	3
+Questions?	3
+Keeping the developer happy	3
+Installation	4
+Users manual	5
+Administration	6
+Base syntax	6
+Extended syntax	6
+Developer information	6
+Known problems	7
+To-Do list	8
+ChangeLog	9
+
+Introduction
+What does it do?
+The abundance of information available on large web sites makes it sometimes hard for visitors to find what they are looking for. A search engine helps, as well as a good navigation. Contexts can help improve the navigation by creating links between related pieces of information.
+This is extension is designed to help work with contexts, however they may be defined. The idea is to define contexts using TypoScript so that they can cover whole branches of a web site. The contexts can then be fetched using “expressions” (see the “expressions” extension).
+This extension is used in the Tesseract project. Within this framework contexts can be retrieved inside Data Filters. It can also be used separately.
+Questions?
+If you have any questions about this extension please ask questions in the TYPO3 English mailing list (typo3.english). You may also want to refer to the Tesseract Project web site (http://www.typo3-tesseract.com/) for support and tutorials. 
+Keeping the developer happy
+If you like this extension, do not hesitate to rate it. Go the Extension Repository, search for this extension, click on its title to go to the details view, then click on the “Ratings” tab and vote (you need to be logged in). Every new vote keeps the developer ticking. So just do it!
+You may also take a step back and reflect about the beauty of sharing. Think about how much you are benefiting and how much yourself is giving back to the community.
+Installation
+Simply install the extension and clear the configuration cache (the contexts are loaded using a TSFE hook). This extension requires extension “expressions” to be installed.
+Users manual
+At the moment, contexts can only be defined using TypoScript. This means it is rather a task for administrators. It is hoped – in a future version – to introduce a user-friendly interface for defining contexts.
+
+Administration
+Base syntax
+Contexts are defined using TypoScript. This is convenient because contexts need to be inherited along the page tree. The syntax is the following:
+config.tx_context.foo = bar
+
+When the context is loaded this will create an entry in the context array with the key “foo” and the value “bar”. Contexts can be retrieved using expressions, in any extension that supports expressions. The contexts are loaded in the extra data of the expressions parser. Thus to retrieve a value from the context you would use a syntax like:
+extra:foo
+
+This will return “bar”.
+Extended syntax
+It is meant for contexts to be able to reference a record from some table. For this contexts support the following syntax:
+config.tx_context.newscat = tt_news_cat:3
+
+This means that the context's entry value is 3, but it's actually the tt_news category with uid = 3.
+When the context is loaded (in particular into the expression parser's extra data) the part with the table name is stripped. So the following expression:
+extra:newscat
+
+will return “3”.
+This extended syntax is meant to be used in the future BE module so that users could select a table and then a record from that table and this would create a context entry. The table name would be written in the context, so that it can be retrieved upon editing.
+This extended syntax can already be used when creating references to database values, just to make it clear to what table it is related, even if there's no helper BE module.
+Developer information
+By default contexts are loaded only into the extra data of the expressions parser. However a hook is available to load the context into something else. Hook usage should be registered using:
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['context']['contextStorage'] = '…';
+
+The designated class must implement the tx_context_ContextStorage interface which consists of a single method:
+storeContext: this receives the context as an array of key-value pairs. It is not expected to return anything.
+
+Known problems
+If you have any issues, please post about your problems to the TYPO3 English mailing list (typo3.english), so that others may benefit from the answers too.  You may also refer to the Tesseract Project web site (http://www.typo3-tesseract.com/).
+For bugs or feature requests, please open an entry in the extension's bug tracker on Forge (http://forge.typo3.org/projects/extension-context/issues).
+
+To-Do list
+The roadmap for the evolution of this extension can be found on Forge: http://forge.typo3.org/projects/roadmap/extension-context
+For feature requests, please open a report on Forge issue tracker: http://forge.typo3.org/projects/extension-context/issues
+
+ChangeLog
+Version
+Changes:
+1.0.0
+First public version
+
