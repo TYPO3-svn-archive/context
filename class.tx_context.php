@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Francois Suter (typo3@cobweb.ch)
+*  (c) 2009-2012 Francois Suter (typo3@cobweb.ch)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -50,21 +50,11 @@ class tx_context {
 		$tsKey = 'tx_' . $this->extKey . '.';
 			// Check for existing context information
 		if (isset($params['config'][$tsKey])) {
-			$contextSetup = $params['config'][$tsKey];
+			$contextSetup = t3lib_div::removeDotsFromTS($params['config'][$tsKey]);
 				// Parse the context to make it into a simple hash table
 			if (count($contextSetup) > 0) {
 				foreach ($contextSetup as $key => $value) {
-					$contextValue = $value;
-						// If the value contains a colon (:), it means it has a syntax like:
-						//		tablename:uid
-						// In this case, keep only the uid part
-					if (strpos($value, ':') !== FALSE) {
-						$valueParts = t3lib_div::trimExplode(':', $value, TRUE);
-						if (isset($valueParts[1])) {
-							$contextValue = $valueParts[1];
-						}
-					}
-					$context[$key] = $contextValue;
+					$context[$key] = $this->cleanUpValues($value);
 				}
 
 					// Load the context setup into the expression parser's extra data
@@ -82,6 +72,35 @@ class tx_context {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Cleans up value for contexts
+	 *
+	 * The values may come with the syntax foo:bar where "foo" is expected to be a table name and "bar" a uid
+	 * Only the "bar" part should be kept
+	 *
+	 * @param $value
+	 * @return array
+	 */
+	public function cleanUpValues($value) {
+		$returnValue = $value;
+		if (is_array($value)) {
+			$returnValue = array();
+			foreach ($value as $key => $subValue) {
+				$returnValue[$key] = $this->cleanUpValues($subValue);
+			}
+
+			// If the value contains a colon (:), it means it has a syntax like:
+			//		tablename:uid
+			// In this case, keep only the uid part
+		} elseif (strpos($value, ':') !== FALSE) {
+			$valueParts = t3lib_div::trimExplode(':', $value, TRUE);
+			if (isset($valueParts[1])) {
+				$returnValue = $valueParts[1];
+			}
+		}
+		return $returnValue;
 	}
 }
 

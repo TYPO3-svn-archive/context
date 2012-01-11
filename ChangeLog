@@ -1,3 +1,8 @@
+2012-01-11 Francois Suter (Cobweb)  <typo3@cobweb.ch>
+
+	* Added proper support for multidimensional contexts, resolves #33124
+	* Added unit tests for new cleanup method
+
 2010-10-27 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 
 	* First public release
