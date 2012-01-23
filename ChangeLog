@@ -1,3 +1,7 @@
+2012-01-23 Francois Suter (Cobweb)  <typo3@cobweb.ch>
+
+	* Added local storage of context data and retrieval API, resolves #33384
+
 2012-01-11 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 
 	* Added proper support for multidimensional contexts, resolves #33124

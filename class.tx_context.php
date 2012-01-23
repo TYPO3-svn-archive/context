@@ -36,6 +36,11 @@ class tx_context {
 	protected $extKey = 'context';	// The extension key
 
 	/**
+	 * @var array Local copy of the context information
+	 */
+	static protected $contextData = array();
+
+	/**
 	 * This method responds to the configArrayPostProc hook of tslib_fe
 	 * It takes the context information from the template and calls on handlers
 	 * to load the data where ever necessary
@@ -57,6 +62,8 @@ class tx_context {
 					$context[$key] = $this->cleanUpValues($value);
 				}
 
+					// Store the context data locally
+				self::$contextData = $context;
 					// Load the context setup into the expression parser's extra data
 				tx_expressions_parser::setExtraData($context);
 					// Call additional context storing handlers to make the context setup available
@@ -72,6 +79,35 @@ class tx_context {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Returns a value from the context data
+	 *
+	 * Multidimensional keys can be passed separated by |, e.g.
+	 * 	$pid = tx_context::getContextValue('foo|pid');
+	 *
+	 * @static
+	 * @param string $key Key to search for in the context array
+	 * @return mixed Value found in the context array
+	 * @throws OutOfRangeException
+	 */
+	static public function getContextValue($key) {
+		if (empty($key)) {
+			throw new OutOfRangeException();
+		} else {
+			$keyList = t3lib_div::trimExplode('|', $key, TRUE);
+			$value = self::$contextData;
+			while (count($keyList) > 0) {
+				$key = array_shift($keyList);
+				if (isset($value[$key])) {
+					$value = $value[$key];
+				} else {
+					throw new OutOfRangeException();
+				}
+			}
+		}
+		return $value;
 	}
 
 	/**

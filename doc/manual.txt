@@ -3,7 +3,7 @@ EXT: Context Manager
 Extension Key: context
 Language: en
 Keywords: forAdmins, forIntermediates
-Copyright 2000-2010, François Suter, <typo3@cobweb.ch>
+Copyright 2000-2012, François Suter, <typo3@cobweb.ch>
 
 This document is published under the Open Content License
 available from http://www.opencontent.org/opl.shtml
@@ -25,7 +25,6 @@ Extended syntax	6
 Developer information	6
 Known problems	7
 To-Do list	8
-ChangeLog	9
 
 Introduction
 What does it do?
@@ -68,7 +67,20 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['context']['contextStorage'] = '…';
 
 The designated class must implement the tx_context_ContextStorage interface which consists of a single method:
 storeContext: this receives the context as an array of key-value pairs. It is not expected to return anything.
+API
+Since version 1.1.0, class tx_context also offers a method for directly getting a context value. Given a context like:
+config.tx_context.foo.pid = 42
 
+this value could be retrieved in PHP with the simple call:
+try {
+	$value = tx_context::getContextValue('foo|pid');
+}
+catch (Exception $e) {
+	// Do something with the exception
+}
+
+Note: don't use dots in the arguments passed in the call (as would be usual with values coming from TypoScript), i.e. in the example above it is "foo|pid" and not "foo.|pid".
+The getContextValue() method will throw an exception if the requested value is not found, so any call to it should be wrapped in a try/catch block.
 Known problems
 If you have any issues, please post about your problems to the TYPO3 English mailing list (typo3.english), so that others may benefit from the answers too.  You may also refer to the Tesseract Project web site (http://www.typo3-tesseract.com/).
 For bugs or feature requests, please open an entry in the extension's bug tracker on Forge (http://forge.typo3.org/projects/extension-context/issues).
@@ -76,10 +88,4 @@ For bugs or feature requests, please open an entry in the extension's bug tracke
 To-Do list
 The roadmap for the evolution of this extension can be found on Forge: http://forge.typo3.org/projects/roadmap/extension-context
 For feature requests, please open a report on Forge issue tracker: http://forge.typo3.org/projects/extension-context/issues
-
-ChangeLog
-Version
-Changes:
-1.0.0
-First public version
 
