@@ -18,6 +18,7 @@ What does it do?	3
 Questions?	3
 Keeping the developer happy	3
 Installation	4
+Compatibility	4
 Users manual	5
 Administration	6
 Base syntax	6
@@ -38,6 +39,8 @@ If you like this extension, do not hesitate to rate it. Go the Extension Reposit
 You may also take a step back and reflect about the beauty of sharing. Think about how much you are benefiting and how much yourself is giving back to the community.
 Installation
 Simply install the extension and clear the configuration cache (the contexts are loaded using a TSFE hook). This extension requires extension “expressions” to be installed.
+Compatibility
+As of version 1.2.0, this extension requires TYPO3 4.5 or more.
 Users manual
 At the moment, contexts can only be defined using TypoScript. This means it is rather a task for administrators. It is hoped – in a future version – to introduce a user-friendly interface for defining contexts.
 
